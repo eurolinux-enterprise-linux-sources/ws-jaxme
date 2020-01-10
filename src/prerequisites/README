@@ -1,0 +1,42 @@
+
+This directory contains files that are required to build and/or run
+JaxMe.
+
+Files required at run time and build time:
+
+xml-apis.jar     This is the Xerces XML Parser, as distributed with
+xercesImpl.jar   Xerces 2.6.2. At runtime, you may replace this XML
+                 parser with any JAXP 1.2 compliant XML Parser. At
+                 built time, you may choose to use another XML Parser
+                 as well, however, you need to adjust the build scripts
+                 in that case. See http://xml.apache.org/xerces-j
+                 for details on Xerces. Note, that parts of Xerces
+                 apply to the DOM and SAX license.
+
+Files required at build time:
+
+antlr.jar        This is the AntLR java parser generator. See
+                 http://www.antlr.org/ for details on AntLR.
+ant-1.5.4.jar	 This is the Ant build system, as distributed with
+                 Apache Ant 1.5.4. See http://ant.apache.org/ for
+                 details.
+junit.jar        This is the JUnit library, used for the JaxMe unit
+                 tests, as distributed with JUnit 3.8.1. See
+                 http://www.junit.org/ for details.
+log4j-1.2.8.jar  This is the Log4J logging library, as distributed
+                 with jakarta-log4j 1.2.8. See
+                 http://jakarta.apache.org/log4j for details.
+hsqldb-1.7.1.jar This is the HSQLDB database, an embeddable SQL engine
+                 for Java, as distributed with hsqldb 1.7.1. It is used
+                 for the Unit tests. Note, that parts of hsqldb apply
+                 to the Hypersonic license. See http://hsqldb.sf.net/
+                 for details.
+
+                 Note, that the hsqldb Jar file is *not* part of the
+                 JaxMe CVS, for licensing reasons. You need to copy
+                 the file from the native HSQLDB distribution.
+xmldb-api-sdk-20021118.jar
+		 		 This is the XML:DB API, as distributed with Xindice
+		 		 1.1b1. See http://xml.apache.org/xindice for details.
+servlet.jar	 This file contains the servlet API, required to build
+                 a web archive, as distributed with Tomcat 4.1.29.

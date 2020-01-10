@@ -1,0 +1,23 @@
+<project name="Clover" default="clover.swing">
+    <import file="macros.xml"/>
+
+    <property name="build.clover.html" location="${build}/clover.html"/>
+   
+    <target name="init" if="build.clover.db">
+        <taskdef resource="clovertasks"/>
+        <clover-setup initString="${build.clover.db}"/>
+    </target>
+
+    <target name="clover.html">
+        <clover-report>
+            <current outfile="${build.clover.html}">
+                <format type="html"/> 
+            </current>   
+        </clover-report>
+    </target>
+
+    <target name="clover.swing">
+        <clover-view/>
+    </target>
+</project>
+   

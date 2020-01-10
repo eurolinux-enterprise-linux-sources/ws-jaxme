@@ -1,0 +1,88 @@
+<!--
+ * Copyright 2002-2004  The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<project name="JaxMe" default="all">
+    <property name="version" value="0.5.1"/>
+    <property name="debug" value="true"/>
+    <property name="optimize" value="false"/>   
+
+    <import file="ant/pm.xml"/>
+    <import file="ant/docs.xml"/>
+   
+    <target name="dist" depends="clean,all,Docs.all">
+        <tar tarfile="${dist}/ws-jaxme-${version}-bin.tar.gz" compression="gzip" longfile="gnu">
+	       <tarfileset prefix="ws-jaxme-${version}" dir="${basedir}">
+	           <include name="LICENSE"/>
+               <include name="NOTICE"/>
+               <include name="README*"/>
+	           <include name="examples/**/*"/>
+               <include name="prerequisites/LICENSE*"/>
+               <include name="prerequisites/README"/>
+               <include name="prerequisites/ant*.jar"/>
+               <include name="prerequisites/junit*.jar"/>
+               <include name="prerequisites/log4j*.jar"/>
+               <include name="prerequisites/xercesImpl.jar"/>
+               <include name="prerequisites/xml-apis.jar"/>
+               <include name="prerequisites/xmldb-api-*.jar"/>
+	       </tarfileset>
+	       <tarfileset prefix="ws-jaxme-${version}/docs" dir="${build.site}"/>
+           <tarfileset prefix="ws-jaxme-${version}/lib" dir="dist">
+               <include name="*.jar"/>
+               <include name="*.zip"/>
+           </tarfileset>
+        </tar>
+        <tar tarfile="${dist}/ws-jaxme-${version}-src.tar.gz" compression="gzip" longfile="gnu">
+           <tarfileset prefix="ws-jaxme-${version}" dir="${basedir}">
+               <include name="src/**/*"/>
+               <include name="etc/**/*"/>
+               <include name="examples/**/*"/>
+               <include name="LICENSE"/>
+               <include name="NOTICE"/>
+               <include name="README*"/>
+			   <include name="build.xml"/>
+           	   <include name="ant/*"/>
+               <include name="jaxme.properties.sample"/>
+               <include name="status.xml"/>
+               <include name="prerequisites/*"/>
+           </tarfileset>
+        </tar>
+        <checksum algorithm="MD5" fileext=".md5">
+            <fileset dir="${dist}"/>
+        </checksum>
+    </target>
+
+    <target name="clean" depends="init"
+         description="Cleans the subdirectories 'build' and 'dist'">
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+    </target>
+
+    <target name="check.export.site" unless="ws.site.dir">
+        <fail>You need to set the property ws.site.dir when invoking
+            target export-site</fail>
+    </target>
+
+    <target name="export.site" depends="check.export.site,clean">
+        <antcall target='Docs.all'>
+            <param name="build.online.site" value="true"/>
+        </antcall>
+        <delete>
+            <fileset dir="${ws.site.dir}" excludes="**/CVS/*.*"/>
+        </delete>
+        <copy todir="${ws.site.dir}">
+	    <fileset dir="${build.site}"/>
+        </copy>
+    </target>
+</project>

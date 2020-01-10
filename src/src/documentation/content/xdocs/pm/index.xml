@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+ Copyright 2004 The Apache Software Foundation.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+<document>
+  <header><title>The JaxMe Persistence Management</title></header>
+  <body>
+    <section><title>The JaxMe Persistence Management</title>
+      <p>JaxMe Persistence Management means the ability to read JaxMe objects from,
+        insert them into, update them in, or delete them from the database.
+        These operations are supported by JaxMe's
+        <link href="../apidocs/org/apache/ws/jaxme/pm/PM.html">persistence managers</link>.
+        </p>
+      <p>The word database has a very broad meaning. The PM layer restricts
+        itself to the most basic operations. As a result, almost arbitrary
+        types of databases may be used:</p>
+      <ul>
+        <li>Relational databases via JDBC; the
+          <link href="../apidocs/org/apache/ws/jaxme/pm/generator/jdbc/JaxMeJdbcSG.html">JaxMeJdbcSG</link>
+          may be used to read an existing database schema via JDBC metadata and converts
+          the tables into JaxMe objects. For any table, it also creates a specific
+          persistence manager, which is a subclass of
+          <link href="../apidocs/org/apache/ws/jaxme/pm/jdbc/PMJdbcImpl.html">PMJdbcImpl</link>.</li>
+        <li>Native XML databases via XML:DB, a database independent API, much like
+          JDBC; native XML databases include <link href="ext:exist"/>,
+          <link href="ext:xindice"/>, or <link href="ext:tamino"/>. The most important
+          difference between native XML and relational databases is, that the formers
+          have no limitations on the structure of XML documents being stored.
+          <!-- TODO: Link to xmldn.org -->
+          As a consequence, there is no need for specific support in the schema
+          and <link href="../apidocs/org/apache/ws/jaxme/pm/xmldb/XmlDbPM.html">XmlDbPM</link>,
+          the persistence manager for XML:DB, is generic.</li>
+        <li>Native XML databases via proprietary API's or protocols; currently this
+          only includes <link href="ext:tamino">Tamino</link>
+          via the
+          <link href="../apidocs/org/apache/ws/pm/ino/InoManager.html">InoManager</link>.</li>
+      </ul>
+    </section>
+  </body>
+</document>

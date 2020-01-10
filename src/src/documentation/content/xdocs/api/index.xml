@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+ Copyright 2004 The Apache Software Foundation.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.2//EN" "document-v12.dtd">
+<document> 
+  <header> 
+    <title>JaxMeAPI: A clean room implementation of the JAXB API</title> 
+  </header> 
+  <body> 
+      <p>
+        JaxMeAPI is clean room implementation of the JAXB API. Unlike the
+        <link href="ext:ri">reference implementation</link> this one
+        comes under a very moderate open source license, the
+        <link href="site:license">Apache License</link>.
+      </p>
+      <note>
+        The reference implementation is now distributed from 
+        <link href='ext:jaxb-si'>Java Dot Net</link>.
+        Though the source may be viewed, the license model used does not
+        really seem to be open source (in the usual sense of 
+        <link href='ext:open-source-definition'>
+        The Open Source Initiative</link> definition).
+        Our implementation (of the basic API)
+        is licensed under the Apache License
+        a truely open source license allowing easy redistribution.
+        Therefore, we continue to recommend our implementation.
+      </note>
+      <p>In terms of Jar files, the JaxMeAPI is equivalent to the following
+        Jar files from the reference implementation:</p>
+      <ol>
+        <li>jaxb-api.jar</li>
+        <li>jax-qname.jar</li>
+        <li>namespace.jar</li>
+      </ol>
+      <p>JaxMeAPI was written as a part of the <link href="site:jaxme2">JaxMe 2</link>
+        project. It is available as a separate module to be included in
+        source distributions of JAXB client applications. Perhaps other
+        JAXB provider implementations. might be interested too at some
+        point.</p>
+  </body>
+</document>

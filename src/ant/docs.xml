@@ -1,0 +1,189 @@
+<!DOCTYPE project [
+  <!ENTITY forrest-targets SYSTEM "forrest-targets.ent">
+]>
+<!--
+ * Copyright 2002-2004  The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+
+-->
+<project name="Docs" default="all">
+    <import file="pm.xml"/>
+
+    <property name="build.docs" location="${build}/docs"/>
+    <property name="build.docs.src.documentation" location="${build.docs}/src/documentation"/>
+    <property name="build.apidocs" location="${build.docs.src.documentation}/content/apidocs"/>
+    <property name="build.manual" location="${build.docs.src.documentation}/content/manual"/>
+    <property name="build.site" location="${build.docs}/build/site"/>
+    <property name="src.documentation" location="${basedir}/src/documentation"/>
+
+    <target name="check.forrest.home" unless="forrest.home">
+        <echo>The property forrest.home is not set. This property should contain the</echo>
+        <echo>location of the Apache Forrest distribution, which is required to</echo>
+        <echo>build the JaxMe documentation. Apache Forrest (version 0.5, as of</echo>
+        <echo>this writing) is available on</echo>
+        <echo>    http://xml.apache.org/forrest/</echo>
+        <echo/>
+        <echo>The property can be set in</echo>
+        <echo>${jaxme.properties.location.1},</echo>
+        <echo>in ${jaxme.properties.location.2},</echo>
+        <echo>or on the command line using -Dforrest.home=&lt;directory&gt;.</echo>
+        <fail>Missing Apache Forrest, terminating.</fail>
+    </target>
+
+    <target name="check.docbookxsl.home" unless="docbookxsl.home">
+        <echo>The property docbookxsl.home is not set. This property should contain</echo>
+        <echo>the location of the DocBook XSL distribution, a set of stylesheets</echo>
+        <echo>used to build the JaxMe documentation. The DocBook XSL distribution</echo>
+        <echo>(version 1.61.3, as of this writing) is available on</echo>
+        <echo>http://sf.net/projects/docbook.</echo>
+        <echo/>
+        <echo>The property can be set in</echo>
+        <echo>${jaxme.properties.location.1},</echo>
+        <echo>in ${jaxme.properties.location.2},</echo>
+        <echo>or on the command line using -Ddocbookxsl.home=&lt;directory&gt;.</echo>
+        <fail>Missing DocBook XSL, terminating.</fail>
+    </target>
+
+    <target name="check.docbook.home" unless="docbook.home">
+        <echo>The property docbook.home is not set. This property should contain</echo>
+        <echo>the location of the DocBook distribution, which includes in particular</echo>
+        <echo>the DocBook DTD. This DTD is used to build the JaxMe documentation.</echo>
+        <echo>The DocBook XML distribution (version 4.1.2, as of this writing)</echo>
+        <echo>is available on http://www.oasis-open.org/docbook/.</echo>
+        <echo/>
+        <echo>The property can be set in</echo>
+        <echo>${jaxme.properties.location.1},</echo>
+        <echo>in ${jaxme.properties.location.2},</echo>
+        <echo>or on the command line using -Ddocbook.home=&lt;directory&gt;.</echo>
+        <fail>Missing DocBook, terminating.</fail>
+    </target>
+
+    <target name="Docs.all" depends="javadoc,docbook.html,old.releases,forrest,replace"
+          description="Generates the documentation"/>
+
+    <target name="javadoc" depends="all"
+          description="Generates the API documentation">
+        <delete dir="${build.apidocs}"/>
+        <mkdir dir="${build.apidocs}"/>
+        <path id="docs.class.path">
+          <path refid="pm.class.path"/>
+          <path refid="xs.class.path"/>
+          <path refid="js.class.path"/>
+          <path refid="jaxme.class.path"/>
+        </path>
+        <javadoc
+                         access="protected"
+                         author="true"
+                   classpathref="docs.class.path"
+                        destdir="${build.apidocs}"
+                   nodeprecated="false"
+               nodeprecatedlist="false"
+                        noindex="false"
+                       nonavbar="false"
+                         notree="false"
+                     splitindex="false"
+                            use="false"
+                        version="true"
+                   packagenames="javax.xml.*,org.apache.ws.jaxme.*"
+                   overview="src/overview.html">
+          <excludepackage name="org.apache.ws.jaxme.examples.misc.address"/>
+          <excludepackage name="org.apache.ws.jaxme.junit"/>
+          <excludepackage name="org.apache.ws.jaxme.pm.junit"/>
+          <excludepackage name="org.apache.ws.jaxme.sqls.junit"/>
+          <excludepackage name="org.apache.ws.jaxme.xs.junit"/>
+          <link href="http://java.sun.com/j2se/1.4.2/docs/api/"
+                offline="true" packagelistloc="${basedir}/etc/package-list"/>
+          <sourcepath>
+            <pathelement location="${src.api}"/>
+            <pathelement location="${src.xs}"/>
+            <pathelement location="${src.js}"/>
+            <pathelement location="${src.jm}"/>
+            <pathelement location="${src.pm}"/>
+            <pathelement location="${build.js.src}"/>
+            <pathelement location="${build.jm.src}"/>
+          </sourcepath>
+        </javadoc>
+    </target>
+
+    &forrest-targets;
+
+    <!-- Run "ant doc -Dbuild.online.site=true" to activate this  -->
+    <target name="replace" if="build.online.site">
+        <echo>Replacing downloads.html with downloads.cgi</echo>
+        <replace dir="${build.docs}/build/site" value="downloads.cgi">
+          <include name="**/*.html"/>
+          <replacetoken>downloads.html</replacetoken>
+        </replace>
+    </target>
+
+    <target name="forrest" depends="check.forrest.home"
+          description="Generates the online site">
+        <mkdir dir="${build.docs.src.documentation}"/>
+        <copy todir="${build.docs.src.documentation}">
+          <fileset dir="${src.documentation}" excludes="manual/**/*"/>
+        </copy>
+        <property name="project.home" location="${build.docs}"/>
+        <antcall target="site"/>
+    </target>
+
+    <target name="forrestwar" depends="check.forrest.home">
+        <mkdir dir="${build.docs.src.documentation}"/>
+        <copy todir="${build.docs.src.documentation}">
+          <fileset dir="${src.documentation}" excludes="manual/**/*"/>
+        </copy>
+        <property name="project.home" location="${build.docs}"/>
+        <antcall target="war"/>
+    </target>
+
+	<target name="old.releases" if="build.online.site">
+        <untar compression="bzip2" dest="${build.docs.src.documentation}/content"
+            src="src/documentation/release-0.3.tar.bz2"/>
+        <untar compression="bzip2" dest="${build.docs.src.documentation}/content"
+            src="src/documentation/release-0.4.tar.bz2"/>
+	</target>
+
+    <target name="docbook.html"
+              depends="check.docbookxsl.home,check.docbook.home,docbook.html.14,docbook.html.50"
+              description="Generates the Manual"/>
+ 
+    <target name="docbook.html.14" unless="have50">
+        <delete dir="{build.manual}"/>
+        <mkdir dir="${build.manual}"/>
+        <style in="${basedir}/src/documentation/manual/jaxme2.xml"
+               out="${build.manual}/index.html"
+             force="${force}"
+            style="${docbookxsl.home}/html/chunk.xsl">
+          <xmlcatalog>
+            <dtd publicid="-//OASIS//DTD DocBook XML V4.1.2//EN" location="${docbook.home}/docbookx.dtd"/>
+          </xmlcatalog>
+        </style>
+    </target>
+
+    <target name="docbook.html.50" if="have50">
+        <!-- We need an explicit factory, because the Xalan version
+             of Java 5.0.2 throws an ArrayIndexOutOfBoundsException. -->
+        <delete dir="{build.manual}"/>
+        <mkdir dir="${build.manual}"/>
+        <style in="${basedir}/src/documentation/manual/jaxme2.xml"
+               out="${build.manual}/index.html"
+             force="${force}"
+            style="${docbookxsl.home}/html/chunk.xsl">
+          <xmlcatalog>
+            <dtd publicid="-//OASIS//DTD DocBook XML V4.1.2//EN" location="${docbook.home}/docbookx.dtd"/>
+          </xmlcatalog>
+          <factory name="org.apache.xalan.processor.TransformerFactoryImpl"/>
+        </style>
+    </target>
+</project>
+   

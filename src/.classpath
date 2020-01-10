@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/api"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/js"/>
+	<classpathentry kind="src" path="src/xs"/>
+	<classpathentry kind="src" path="src/jaxme"/>
+	<classpathentry excluding="org/apache/ws/jaxme/generator/ino/api4j/|org/apache/ws/jaxme/pm/ino/api4j/" kind="src" path="src/pm"/>
+	<classpathentry kind="src" path="build/js/src"/>
+	<classpathentry kind="src" path="build/jm/src"/>
+	<classpathentry kind="src" path="build/jm/test/jaxme/src"/>
+	<classpathentry kind="src" path="build/pm/test/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="prerequisites/xml-apis.jar"/>
+	<classpathentry exported="true" kind="lib" path="prerequisites/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="prerequisites/ant-1.5.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="prerequisites/log4j-1.2.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="prerequisites/xmldb-api-20021118.jar"/>
+	<classpathentry kind="src" path="src/webapp/java"/>
+	<classpathentry exported="true" kind="lib" path="prerequisites/servlet.jar"/>
+	<classpathentry exported="true" kind="lib" path="prerequisites/antlr.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
