@@ -1,0 +1,44 @@
+<!--
+ * Copyright 2002-2003, 2004  The Apache Software Foundation
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<project name="API" default="all">
+    <import file="clover.xml"/>
+
+    <property name="build.api" location="${build}/api"/>
+    <property name="build.api.classes" location="${build.api}/classes"/>
+    <property name="src.api" location="src/api"/>
+
+    <target name="API.clean">
+        <delete dir="${build.api}"/>
+    </target>
+   
+    <path id="api.class.path">
+        <pathelement location="${preqs}/xml-apis-1.3.02.jar"/>
+    </path>
+
+    <target name="API.compile" depends="init">
+        <jc srcdir="${src.api}" destdir="${build.api.classes}"
+            classpathref="api.class.path" excludes="" java14classes=""/>
+    </target>
+
+    <target name="API.jar" depends="API.compile">
+        <jarzip srcdir="${src.api}" classesdir="${build.api.classes}"
+                filename="jaxmeapi"/>
+    </target>
+
+    <target name="all" depends="API.jar"/>
+
+    <target name="test" depends="API.jar"/>
+</project>

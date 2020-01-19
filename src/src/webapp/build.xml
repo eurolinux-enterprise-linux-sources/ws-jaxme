@@ -1,0 +1,110 @@
+<project name="webapp" default="all">
+<!--
+ Copyright 2003, 2004  The Apache Software Foundation
+  
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+ http://www.apache.org/licenses/LICENSE-2.0
+  
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+  <!-- Make sure, that *all* targets (except those on which init depends)
+       depend on init. Would be nice, if Ant could do that for us.
+       All the properties below could as well be set in
+       ${user.home}/.jaxme.properties or ${basedir}/jaxme.properties -->
+  <target name="init" depends="init">
+	<property name="jaxme.properties.location.1" location="${user.home}/.jaxme.properties"/>
+	<property name="jaxme.properties.location.2" location="${basedir}/jaxme.properties"/>
+    <available file="${jaxme.properties.location.1}" property="jaxme.properties.location" value="${jaxme.properties.location.1}"/>
+    <property name="jaxme.properties.location" location="${basedir}/jaxme.properties"/>
+    <echo>Loading custom properties from ${jaxme.properties.location}</echo>
+    <property file="${jaxme.properties.location}"/>
+
+    <property name="build" location="${basedir}/../../build/webapp"/>
+    <property name="build.classes" location="${build}/classes"/>
+    <property name="preqs" location="${basedir}/../../prerequisites"/>
+    <property name="dist" location="${basedir}/../../dist"/>
+    <property name="debug" value="true"/>
+    <property name="optimize" value="false"/>
+    <property name="force" value="false"/>
+    <property name="logLevel" value="warn"/>
+    <property name="src" location="${basedir}/java"/>
+
+	<path id="jaxme.webapp.class.path">
+	  <pathelement location="${dist}/jaxmeapi.jar"/>
+	  <pathelement location="${dist}/jaxmexs.jar"/>
+	  <pathelement location="${dist}/jaxmejs.jar"/>
+	  <pathelement location="${dist}/jaxme2.jar"/>
+	  <pathelement location="${preqs}/servlet.jar"/>
+	</path>
+  </target>
+
+  <target name="init.clover" if="build.clover.db">
+    <taskdef resource="clovertasks"/>
+    <clover-setup initString="${build.clover.db}"/>
+  </target>
+
+  <target name="clean" depends="init">
+    <delete dir="${build}"/>
+    <delete dir="${dist}/jaxme.war"/>
+  </target>
+
+  <target name="compile" depends="init">
+    <mkdir dir="${build.classes}"/>
+    <javac destdir="${build.classes}" srcdir="${src}" debug="${debug}"
+           source="1.3" target="1.3"   
+           optimize="${optimize}" classpathref="jaxme.webapp.class.path"/>
+  </target>
+
+  <target name="check.tomcat.home" depends="init" unless="tomcat.home">
+    <echo>You have not set the property tomcat.home in your jaxme.properties.</echo>
+    <echo>The property indicates the directory, where your Tomcat is installed.</echo>
+    <echo>The property may be set in ${jaxme.properties.location.1} or</echo>
+    <echo>${jaxme.properties.location.2}.</echo>
+    <fail>Missing tomcat.home property, terminating</fail>
+  </target>
+
+  <target name="all" depends="compile">
+  </target>
+
+  <target name="fastinstall" depends="all,check.tomcat.home">
+    <mkdir dir="${tomcat.home}/webapps/jaxme/WEB-INF/classes"/>
+    <copy todir="${tomcat.home}/webapps/jaxme/WEB-INF/classes">
+      <fileset dir="${build.classes}"/>
+    </copy>
+    <copy todir="${tomcat.home}/webapps/jaxme">
+      <fileset dir="${basedir}" includes="*.jsp"/>
+    </copy>
+    <copy todir="${tomcat.home}/webapps/jaxme/WEB-INF/lib">
+      <fileset dir="${dist}" includes="jaxme*.jar"/>
+    </copy>
+    <copy file="${basedir}/web.xml" todir="${tomcat.home}/webapps/jaxme/WEB-INF" overwrite="true">
+      <filterset>
+        <filter token="work.dir" value="${tomcat.home}/work"/>
+        <filter token="http.proxyHost" value="${http.proxyHost}"/>
+        <filter token="http.proxyPort" value="${http.proxyPort}"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <target name="war" depends="all">
+    <copy todir="${build}" file="${basedir}/web.xml">
+      <filterset>
+        <filter token="work.dir" value=""/>
+        <filter token="http.proxyHost" value=""/>
+        <filter token="http.proxyPort" value=""/>
+      </filterset>
+    </copy>
+    <war destfile="${dist}/jaxme.war" webxml="${build}/web.xml">
+      <classes dir="${build.classes}"/>
+      <fileset dir="${basedir}" includes="*.jsp"/>
+      <lib dir="${dist}" includes="jaxme*.jar"/>
+    </war>
+  </target>
+</project>

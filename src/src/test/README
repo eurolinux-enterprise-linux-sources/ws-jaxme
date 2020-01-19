@@ -1,0 +1,8 @@
+This folder contains various files and example scripts related to testing:
+
+jaxb		The schema files in this folder are compiled twice: Once by
+			JAXB and once by JaxMe. They are used to verify features and
+			behaviour specified by JAXB.
+
+jaxme		The schema files in this folder are using features, which are
+			unknown to JAXB.
