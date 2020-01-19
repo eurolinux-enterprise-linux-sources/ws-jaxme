@@ -32,7 +32,7 @@
 
 Name:           ws-jaxme
 Version:        0.5.2
-Release:        10%{?dist}
+Release:        9%{?dist}
 Epoch:          0
 Summary:        Open source implementation of JAXB
 
@@ -177,9 +177,6 @@ install -pm 644 LICENSE $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 %doc %{_docdir}/%{name}-%{version}
 
 %changelog
-* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 00.5.2-10
-- Mass rebuild 2013-12-27
-
 * Fri Jun 28 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:0.5.2-9
 - Rebuild to regenerate API documentation
 - Resolves: CVE-2013-1571
